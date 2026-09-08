@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Статический сайт — GitHub Pages</title>
+    <meta name="description" content="Базовый статический сайт на чистых HTML, CSS и JavaScript, готовый к публикации через GitHub Pages.">
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <header class="site-header">
+        <nav class="nav">
+            <a class="nav__logo" href="#hero">Маскот</a>
+            <ul class="nav__list">
+                <li><a href="#features">Возможности</a></li>
+                <li><a href="#about">О проекте</a></li>
+                <li><a href="#contact">Контакты</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Hero-секция -->
+        <section id="hero" class="hero">
+            <div class="hero__content">
+                <h1 class="hero__title">Добро пожаловать</h1>
+                <p class="hero__subtitle">
+                    Базовый статический сайт на чистых HTML, CSS и JavaScript.
+                    Готов к публикации через GitHub Pages — без сборки и зависимостей.
+                </p>
+                <div class="hero__actions">
+                    <button class="btn btn--primary" id="cta-primary" type="button">Начать</button>
+                    <button class="btn btn--ghost" id="cta-secondary" type="button">Узнать больше</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Секция возможностей -->
+        <section id="features" class="section">
+            <h2 class="section__title">Возможности</h2>
+            <p class="section__lead">
+                Проект намеренно минималистичен: простая структура, понятные файлы
+                и никаких сторонних библиотек. Это хорошая основа, чтобы позже
+                добавить интерактивного SVG-маскота.
+            </p>
+            <div class="cards">
+                <article class="card">
+                    <h3>Быстрый старт</h3>
+                    <p>Чистые HTML, CSS и JavaScript. Никакой сборки, никакой установки зависимостей.</p>
+                </article>
+                <article class="card">
+                    <h3>Готов к GitHub Pages</h3>
+                    <p>Использованы относительные пути, поэтому сайт работает из любой подпапки репозитория.</p>
+                </article>
+                <article class="card">
+                    <h3>Место для маскота</h3>
+                    <p>Структура подготовлена под отдельную разработку интерактивного SVG-маскота.</p>
+                </article>
+            </div>
+        </section>
+
+        <!-- Секция о проекте -->
+        <section id="about" class="section section--alt">
+            <h2 class="section__title">О проекте</h2>
+            <p class="section__lead">
+                Это минимальная тестовая страница. Здесь проверяется, что разметка,
+                стили и скрипты подключаются корректно и работают как статический сайт.
+            </p>
+            <button class="btn btn--primary" id="about-btn" type="button">Показать детали</button>
+            <div id="about-details" class="details" hidden>
+                <p>Здесь будут появляться дополнительные сведения по клику. Логика реализована в <code>script.js</code>.</p>
+            </div>
+        </section>
+
+        <!-- Секция контактов -->
+        <section id="contact" class="section">
+            <h2 class="section__title">Контакты</h2>
+            <p class="section__lead">Проверим, что кнопки реагируют на нажатия.</p>
+            <button class="btn btn--primary" id="contact-btn" type="button">Нажми меня</button>
+            <p id="contact-feedback" class="feedback" role="status" aria-live="polite"></p>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <p>&copy; 2026 Статический сайт. Сделано для GitHub Pages.</p>
+    </footer>
+
+    <script src="./script.js"></script>
+</body>
+</html>
