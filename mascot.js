@@ -4,13 +4,19 @@
  * Базовый класс Mascot — инкапсулирует SVG-персонажа и машину состояний.
  *
  * Архитектура:
- *   - SVG генерируется из строки-шаблона и вставляется в контейнер.
+ *   - SVG генерируется из строки-шаблона и вставляется в обёртку .mascot__actor,
+ *     которая, в свою очередь, вставляется в контейнер. Это разделяет зоны
+ *     ответственности: actor-обёртка управляет «мировой» позицией маскота
+ *     (translateX/translateY), а внутренние <g> с CSS-классами управляют
+ *     анимацией частей тела через keyframes — они не конфликтуют.
  *   - Каждая анимируемая часть тела обёрнута в <g> с CSS-классом
  *     (mascot__head, mascot__body, mascot__arm--left/right,
  *      mascot__leg--left/right). Это позволяет анимировать их независимо
  *      через CSS keyframes.
  *   - Машина состояний переключает CSS-класс на корневом <svg>, что
  *     автоматически запускает нужный набор анимаций.
+ *   - Направление взгляда задаётся через CSS-класс .mascot--facing-*
+ *     на actor-обёртке (масштабирует SVG по горизонтали).
  *
  * Использование:
  *   var mascot = new Mascot(document.getElementById('hero-mascot'));
@@ -80,8 +86,17 @@
 
         this.container = container;
         this.currentState = null;
+        this.facing = "right"; // направление взгляда по умолчанию
+
+        // actor — внешняя обёртка для «мировых» трансформаций (перемещение по сцене).
+        // CSS keyframes на частях тела её не затрагивают, что исключает конфликты.
+        this.actor = document.createElement("div");
+        this.actor.className = "mascot__actor";
+        this.actor.classList.add("mascot--facing-" + this.facing);
+
         this.svg = buildSVG();
-        this.container.appendChild(this.svg);
+        this.actor.appendChild(this.svg);
+        this.container.appendChild(this.actor);
 
         // Удобная ссылка на часто используемые части тела.
         this.parts = {
@@ -152,14 +167,53 @@
     };
 
     /**
+     * Возвращает actor-обёртку (внешний div вокруг SVG), которая используется
+     * для перемещения маскота по сцене. Поведения (behaviours) применяют
+     * transform к этой обёртке, чтобы не конфликтовать с CSS keyframes
+     * на частях тела.
+     * @returns {HTMLDivElement}
+     */
+    Mascot.prototype.getActor = function () {
+        return this.actor;
+    };
+
+    /**
+     * Задаёт направление взгляда маскота.
+     * Реализовано через CSS-класс .mascot--facing-left/right на actor-обёртке,
+     * который зеркально отражает SVG по горизонтали (scaleX(-1)).
+     * @param {string} dir — "left" или "right"
+     */
+    Mascot.prototype.setFacing = function (dir) {
+        if (dir !== "left" && dir !== "right") {
+            console.warn("[Mascot] Неизвестное направление:", dir);
+            return;
+        }
+        if (this.facing === dir) { return; }
+        this.facing = dir;
+        if (!this.actor) { return; }
+        this.actor.classList.remove("mascot--facing-left");
+        this.actor.classList.remove("mascot--facing-right");
+        this.actor.classList.add("mascot--facing-" + dir);
+    };
+
+    /**
+     * Возвращает текущее направление взгляда ("left" или "right").
+     * @returns {string}
+     */
+    Mascot.prototype.getFacing = function () {
+        return this.facing;
+    };
+
+    /**
      * Удаляет маскота из DOM и очищает ссылки.
      */
     Mascot.prototype.destroy = function () {
-        if (this.svg && this.svg.parentNode) {
-            this.svg.parentNode.removeChild(this.svg);
+        if (this.actor && this.actor.parentNode) {
+            this.actor.parentNode.removeChild(this.actor);
         }
         this.container = null;
         this.svg = null;
+        this.actor = null;
         this.parts = null;
         this.currentState = null;
     };

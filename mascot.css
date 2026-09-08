@@ -15,6 +15,36 @@
     overflow: visible;
 }
 
+/* --- Actor-обёртка (внешний div вокруг SVG) ---
+   Используется поведениями (behaviours) для перемещения маскота по сцене.
+   ВАЖНО: display: inline-block нужен, чтобы offsetWidth обёртки
+   соответствовал ширине SVG (~20px), а не занимал всю ширину контейнера.
+   Иначе расчёт целевой позиции centerX = (containerW - actorW) / 2
+   даст 0 и маскот придёт в левый край, а не в центр.
+   position: relative + top:0/left:0 позволяют использовать transform
+   без сдвига layout-потока. will-change оптимизирует композитинг. */
+.mascot__actor {
+    position: relative;
+    display: inline-block;
+    top: 0;
+    left: 0;
+    line-height: 0;       /* убирает inline-зазор под SVG */
+    vertical-align: top;  /* убирает baseline-сдвиг */
+    will-change: transform;
+    transition: none;
+}
+
+/* --- Направление взгляда ---
+   facing-left зеркально отражает SVG по горизонтали, чтобы маскот «смотрел»
+   влево. Базовое SVG-построение смотрит вправо. */
+.mascot--facing-left .mascot {
+    transform: scaleX(-1);
+}
+/* facing-right — явный класс для симметрии (по умолчанию SVG смотрит вправо) */
+.mascot--facing-right .mascot {
+    transform: scaleX(1);
+}
+
 /* Линии тела — чёрные, толстые, со скруглёнными концами */
 .mascot__torso,
 .mascot__arm line,
@@ -156,11 +186,16 @@
 
 /* ============================================================
    Контейнер маскота в hero-секции
+   position: relative + overflow: hidden важны для IntroScene:
+   маскот стартует за правой границей и въезжает в видимую область.
+   text-align: left обязателен: .hero наследует text-align: center,
+   а .mascot__actor теперь inline-block и иначе отцентрируется
+   автоматически — тогда transform сдвинет маскота ещё правее центра.
    ============================================================ */
 .hero__mascot {
-    display: flex;
-    justify-content: center;
-    align-items: flex-end;
+    position: relative;
+    overflow: hidden;
+    text-align: left;     /* actor прилипает к левому краю; transform считает от него */
     height: 44px;        /* немного больше 40px, чтобы оставить воздух */
     margin-bottom: 20px;
 }
