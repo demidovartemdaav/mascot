@@ -6,6 +6,7 @@
     <title>Статический сайт — GitHub Pages</title>
     <meta name="description" content="Базовый статический сайт на чистых HTML, CSS и JavaScript, готовый к публикации через GitHub Pages.">
     <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="./css/mascot.css">
 </head>
 <body>
     <header class="site-header">
@@ -23,6 +24,7 @@
         <!-- Hero-секция -->
         <section id="hero" class="hero">
             <div class="hero__content">
+                <div class="hero__mascot" id="hero-mascot" aria-hidden="true"></div>
                 <h1 class="hero__title">Добро пожаловать</h1>
                 <p class="hero__subtitle">
                     Базовый статический сайт на чистых HTML, CSS и JavaScript.
@@ -85,6 +87,9 @@
         <p>&copy; 2026 Статический сайт. Сделано для GitHub Pages.</p>
     </footer>
 
+    <!-- Скрипты маскота: states.js должен загружаться раньше mascot.js -->
+    <script src="./js/mascot/states.js"></script>
+    <script src="./js/mascot/mascot.js"></script>
     <script src="./script.js"></script>
 </body>
 </html>

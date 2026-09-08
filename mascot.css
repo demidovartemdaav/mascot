@@ -1,0 +1,178 @@
+/* ============================================================
+   Mascot — стили и keyframe-анимации
+   -----------------------------------------------------------------
+   Маскот: минималистичный чёрный stickman в стиле Xiao Xiao.
+   SVG: viewBox 40×80, рендерится с высотой 40px.
+   Каждая анимируемая часть тела обёрнута в <g> с CSS-классом,
+   что позволяет вращать её вокруг нужной точки через CSS transform.
+   ============================================================ */
+
+/* --- Размер и базовое оформление SVG --- */
+.mascot {
+    display: block;
+    height: 40px;
+    width: auto;
+    overflow: visible;
+}
+
+/* Линии тела — чёрные, толстые, со скруглёнными концами */
+.mascot__torso,
+.mascot__arm line,
+.mascot__leg line {
+    stroke: #000000;
+    stroke-width: 4;
+    stroke-linecap: round;
+    fill: none;
+}
+
+/* Голова — сплошной чёрный круг */
+.mascot__head circle {
+    fill: #000000;
+}
+
+/* --- Точки вращения частей тела ---
+   transform-box: view-box гарантирует, что координаты transform-origin
+   интерпретируются в пользовательской системе координат SVG (viewBox). */
+.mascot__head,
+.mascot__arm,
+.mascot__leg,
+.mascot__body {
+    transform-box: view-box;
+}
+
+.mascot__head        { transform-origin: 20px 17px; }  /* основание шеи */
+.mascot__arm--left   { transform-origin: 20px 22px; }  /* левое плечо */
+.mascot__arm--right  { transform-origin: 20px 22px; }  /* правое плечо */
+.mascot__leg--left   { transform-origin: 20px 42px; }  /* левое бедро */
+.mascot__leg--right  { transform-origin: 20px 42px; }  /* правое бедро */
+.mascot__body        { transform-origin: 20px 42px; }  /* центр таза */
+
+/* ============================================================
+   Состояние: IDLE
+   Лёгкое дыхание и едва заметное покачивание головы.
+   Все движения тонкие, чтобы передать «покой».
+   ============================================================ */
+.mascot--idle .mascot__head {
+    animation: mascot-idle-head 2.6s ease-in-out infinite;
+}
+@keyframes mascot-idle-head {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-0.8px); }
+}
+
+.mascot--idle .mascot__body {
+    animation: mascot-idle-breathe 2.6s ease-in-out infinite;
+}
+@keyframes mascot-idle-breathe {
+    0%, 100% { transform: scaleY(1); }
+    50%      { transform: scaleY(1.02); }
+}
+
+.mascot--idle .mascot__arm--left {
+    animation: mascot-idle-arm-l 2.6s ease-in-out infinite;
+}
+@keyframes mascot-idle-arm-l {
+    0%, 100% { transform: rotate(0deg); }
+    50%      { transform: rotate(2deg); }
+}
+
+.mascot--idle .mascot__arm--right {
+    animation: mascot-idle-arm-r 2.6s ease-in-out infinite;
+}
+@keyframes mascot-idle-arm-r {
+    0%, 100% { transform: rotate(0deg); }
+    50%      { transform: rotate(-2deg); }
+}
+
+/* ============================================================
+   Состояние: WALKING
+   Поочерёдное движение рук и ног в противофазе + лёгкое покачивание тела.
+   ============================================================ */
+.mascot--walking .mascot__leg--left {
+    animation: mascot-walk-leg-l 0.6s ease-in-out infinite;
+}
+@keyframes mascot-walk-leg-l {
+    0%, 100% { transform: rotate(22deg); }
+    50%      { transform: rotate(-22deg); }
+}
+
+.mascot--walking .mascot__leg--right {
+    animation: mascot-walk-leg-r 0.6s ease-in-out infinite;
+}
+@keyframes mascot-walk-leg-r {
+    0%, 100% { transform: rotate(-22deg); }
+    50%      { transform: rotate(22deg); }
+}
+
+.mascot--walking .mascot__arm--left {
+    animation: mascot-walk-arm-l 0.6s ease-in-out infinite;
+}
+@keyframes mascot-walk-arm-l {
+    0%, 100% { transform: rotate(-18deg); }
+    50%      { transform: rotate(18deg); }
+}
+
+.mascot--walking .mascot__arm--right {
+    animation: mascot-walk-arm-r 0.6s ease-in-out infinite;
+}
+@keyframes mascot-walk-arm-r {
+    0%, 100% { transform: rotate(18deg); }
+    50%      { transform: rotate(-18deg); }
+}
+
+.mascot--walking .mascot__body {
+    animation: mascot-walk-bob 0.3s ease-in-out infinite;
+}
+@keyframes mascot-walk-bob {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-2px); }
+}
+
+/* ============================================================
+   Состояние: LOOKING (looking around)
+   Повороты головы влево-вправо с паузами по краям.
+   Тело и конечности остаются в покое.
+   ============================================================ */
+.mascot--looking .mascot__head {
+    animation: mascot-look-head 3.2s ease-in-out infinite;
+}
+@keyframes mascot-look-head {
+    0%, 100% { transform: rotate(0deg); }
+    15%, 35% { transform: rotate(-22deg); }   /* смотрит влево */
+    50%      { transform: rotate(0deg); }
+    65%, 85% { transform: rotate(22deg); }    /* смотрит вправо */
+}
+
+/* ============================================================
+   Состояние: SITTING
+   Статичная поза: ноги согнуты вперёд, тело опущено, руки расслаблены.
+   Без зацикленной анимации — маскот просто «сидит».
+   ============================================================ */
+.mascot--sitting .mascot__leg--left  { transform: rotate(85deg); }
+.mascot--sitting .mascot__leg--right { transform: rotate(-85deg); }
+.mascot--sitting .mascot__body       { transform: translateY(8px); }
+.mascot--sitting .mascot__arm--left  { transform: rotate(40deg); }
+.mascot--sitting .mascot__arm--right { transform: rotate(-40deg); }
+
+/* ============================================================
+   Контейнер маскота в hero-секции
+   ============================================================ */
+.hero__mascot {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    height: 44px;        /* немного больше 40px, чтобы оставить воздух */
+    margin-bottom: 20px;
+}
+
+/* ============================================================
+   Accessibility: уважаем prefers-reduced-motion
+   Пользователям, попросившим уменьшить анимации, показываем статичную позу.
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+    .mascot,
+    .mascot * {
+        animation: none !important;
+        transition: none !important;
+    }
+}

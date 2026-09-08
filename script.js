@@ -12,6 +12,22 @@
         return document.getElementById(id);
     }
 
+    // --- Инициализация маскота в hero-секции ---
+    // На этом этапе маскот просто стоит и демонстрирует idle-анимацию.
+    // Другие состояния (walking, looking, sitting) уже реализованы в коде
+    // и могут быть активированы вызовом heroMascot.setState('walking') и т.п.
+    var heroMascot = null;
+    var heroMascotContainer = $("hero-mascot");
+    if (heroMascotContainer && typeof Mascot === "function") {
+        try {
+            heroMascot = new Mascot(heroMascotContainer, { initialState: "idle" });
+            // Открываем ссылку для отладки из консоли: window.heroMascot
+            window.heroMascot = heroMascot;
+        } catch (e) {
+            console.warn("Не удалось инициализировать маскота:", e);
+        }
+    }
+
     // --- Кнопка "Начать" в hero: плавный переход к секции возможностей ---
     var ctaPrimary = $("cta-primary");
     if (ctaPrimary) {
